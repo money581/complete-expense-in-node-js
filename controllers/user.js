@@ -15,7 +15,7 @@ function isstringinvalid(string){
  const signup = async (req, res)=>{
     try{
     const { name, email, password } = req.body;
-    console.log('email', email)
+    //console.log('email', email)
     if(isstringinvalid(name) || isstringinvalid(email || isstringinvalid(password))){
         return res.status(400).json({err: "Bad parameters . Something is missing"})
     }
@@ -41,7 +41,7 @@ const login = async (req, res) => {
     if(isstringinvalid(email) || isstringinvalid(password)){
         return res.status(400).json({message: 'EMail idor password is missing ', success: false})
     }
-    console.log(password);
+    //console.log(password);
     const user  = await User.findAll({ where : { email }})
         if(user.length > 0){
            bcrypt.compare(password, user[0].password, (err, result) => {
