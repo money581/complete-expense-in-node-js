@@ -1,7 +1,3 @@
-
-
-
-
 function addNewExpense(e){
     e.preventDefault();
 
@@ -18,17 +14,37 @@ addNewExpensetoUI(response.data.expense)
 
 }).catch(err=>showError(err))
 }
+function showPremiumuserMessage(){
+  document.getElementById('rzp-button1').style.visibility="hidden"
+        document.getElementById('message').innerHTML="you are prime member now"
+}
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+} 
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
       const token=localStorage.getItem('token')
+      const decodeToken=parseJwt(token)
+      //console.log(decodeToken);
+      const isadmin = decodeToken.ispremiumuser
+      if(isadmin){
+      showPremiumuserMessage()
+      showLeaderboard()
+      }
       const response = await axios.get('http://localhost:3000/expense/getexpenses',{headers:{"Authorization":token}});
       const expenses = response.data.expenses;
   
       expenses.forEach(expense => {
         addNewExpensetoUI(expense);
       });
-    } catch (err) {
+    } catch (err) { 
       showError(err);
     }
   });
@@ -65,7 +81,22 @@ function deleteExpense(event, expenseId) {
   function showError(err){
     document.body.innerHTML+=`<div style="color:red;">$(err)</div>`
   }
+function showLeaderboard(){
+  const inputElement=document.createElement("input")
+  inputElement.type="button"
+  inputElement.value="Show Leaderboard"
+inputElement.onclick=async()=>{
+  const token=localStorage.getItem('token')
+const userLeaderBoardArray=await axios.get('http://localhost:3000/premium/showLeaderBoard',{headers:{"Authorization":token}})
+ var leaderboardElem=document.getElementById('leaderboard')
+ leaderboardElem.innerHTML+='<h1> Leader Board </h1>'
+ userLeaderBoardArray.data.forEach((userDetails)=>{
+  leaderboardElem.innerHTML+=`<li>Name - ${userDetails.name} total Expense - ${userDetails.total_cost  } `
+ })
+}
+document.getElementById('message').appendChild(inputElement)
 
+}
 
   document.getElementById('rzp-button1').onclick=async function(e){
     const token=localStorage.getItem('token')
@@ -77,6 +108,10 @@ function deleteExpense(event, expenseId) {
       "handler":async function(response){
         await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{order_id:options.order_id, payment_id:response.razorpay_payment_id},{headers:{"Authorization":token}})
         alert('you are a premium user now')
+        document.getElementById('rzp-button1').style.visibility="hidden"
+        document.getElementById('message').innerHTML="you are prime member now"
+      localStorage.setItem('token',res.data.token)
+      // showLeaderboard()
       }
     }
  

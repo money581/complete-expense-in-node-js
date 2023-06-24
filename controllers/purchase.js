@@ -44,7 +44,7 @@ const purchasepremium =async (req, res) => {
 
         
                 
-    } catch (err) {
+    } catch (err) { 
         console.log(err);
         res.status(403).json({ errpr: err, message: 'Sometghing went wrong' })
 
