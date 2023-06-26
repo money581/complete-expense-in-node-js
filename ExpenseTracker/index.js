@@ -110,7 +110,7 @@ document.getElementById('message').appendChild(inputElement)
         alert('you are a premium user now')
         document.getElementById('rzp-button1').style.visibility="hidden"
         document.getElementById('message').innerHTML="you are prime member now"
-      localStorage.setItem('token',res.data.token)
+      localStorage.setItem('token',response.data.token)
       // showLeaderboard()
       }
     }

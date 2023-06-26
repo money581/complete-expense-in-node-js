@@ -8,7 +8,18 @@ const addexpense = (req, res) => {
     }
     
     Expense.create({ expenseamount, description, category, userId: req.user.id}).then(expense => {
-        return res.status(201).json({expense, success: true } );
+        const totalExpense=Number(req.user.totalExpenses)+Number(expenseamount)
+        User.update({
+            totalExpenses:totalExpense
+        },{
+            where:{id:req.user.id}
+         } ).then(async()=>{
+            res.status(201).json({expense:expense} );
+         })
+         .catch(async(err)=>{
+            return res.status(500).json({success : false, error: err})
+         })
+       
     }).catch(err => {
         return res.status(500).json({success : false, error: err})
     })
