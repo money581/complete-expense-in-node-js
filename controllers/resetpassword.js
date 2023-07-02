@@ -88,10 +88,10 @@ exports.updatePassword = (req, res) => {
   try {
     const { newpassword } = req.query;
     const { resetpasswordid } = req.params;
-    console.log(resetpasswordid);
+    
     ForgotPassword.findOne({ where: { id: resetpasswordid } }).then(resetpasswordrequest => {
       User.findOne({ where: { id: resetpasswordrequest.userId } }).then(user => {
-        console.log('userDetails', user)
+       // console.log('userDetails', user)
         if (user) {
           //encrypt the password
 

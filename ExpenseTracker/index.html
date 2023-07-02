@@ -35,6 +35,86 @@
 
     <ul id="listOfExpenses">
     </ul>
+    <style>
+        /* CSS styling for the form and table */
+        h1{
+          text-align: center;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        .container{
+         
+          margin: 10px;
+        }
+        
+        th, td {
+          text-align: left;
+          padding: 8px;
+        }
+        
+        th {
+          background-color: #f2f2f2;
+        }
+        
+        .filter-select {
+          margin-bottom: 10px;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Day To Expense</h1>
+      
+      <!-- Filter dropdown for time period -->
+      <label for="filter">Filter by:</label>
+      <select id="filter" class="filter-select">
+        <option value="daily">Daily</option>
+      
+        <option value="monthly">Monthly</option>
+        <option value="weekly">Yearly</option>
+      </select>
+      
+      <!-- Table to display expenses and incomes -->
+      <div class="container">
+      <table id="Expense-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Expense and income data rows will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+      
+     
+    <br> 
+    <h1>Yearly Report</h1>
+    <div class="container">
+      <table id="Expense-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Saving</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Expense and income data rows will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+    <br><br>
+    <button onclick="download()" id="downloadexpense">Download File</button>
     <ul id="leaderboard"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
         integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
