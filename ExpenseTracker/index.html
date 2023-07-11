@@ -5,13 +5,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <title>Expense Tracker</title>
 </head>
 
 <body>
-    <div>
-        <form onsubmit="addNewExpense(event)">
-            
+  
+  <header id="main-header" class="bg-success text-white p-4 mb-3">
+    <div id="message"></div>
+    <button id="rzp-button1">Buy Premium</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 id="header-title">expanse tracker</h1>
+            </div>
+            <div class="col-md-6 align-self-center">
+                <input type="text" class="form-control" id="filter" placeholder="Search Items...">
+            </div>
+        </div>
+    </div>
+</header>
+   
+    <div class="container">
+      <div id="main" class="card card-body">
+          <h2 class="title">Budget Chart</h2>
+          <form id="addForm"  onsubmit="addNewExpense(event)">
             <label for="expenseamount">Choose expenseamount:</label>
             <input type="number" name="expenseamount" required> </input>
             <label for="description">Choose description:</label>
@@ -23,99 +43,50 @@
                 <option value="electricity">electricity</option>
                 <option value="Movie">Movie</option>
             </select>
-            <button>Add Expense</button>
-        </form>
-    </div>
-    <div id="message"></div>
-<button id="rzp-button1">Buy Premium</button>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<h1>
-    Expenses
-</h1>
+            <button  class="btn btn-primary">Add Expense</button>
+              
+          </form>
 
-    <ul id="listOfExpenses">
-    </ul>
-    <style>
-        /* CSS styling for the form and table */
-        h1{
-          text-align: center;
-        }
-        table {
-          border-collapse: collapse;
-          width: 100%;
-        }
-        .container{
-         
-          margin: 10px;
-        }
-        
-        th, td {
-          text-align: left;
-          padding: 8px;
-        }
-        
-        th {
-          background-color: #f2f2f2;
-        }
-        
-        .filter-select {
-          margin-bottom: 10px;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Day To Expense</h1>
-      
-      <!-- Filter dropdown for time period -->
-      <label for="filter">Filter by:</label>
-      <select id="filter" class="filter-select">
-        <option value="daily">Daily</option>
-      
-        <option value="monthly">Monthly</option>
-        <option value="weekly">Yearly</option>
-      </select>
-      
-      <!-- Table to display expenses and incomes -->
-      <div class="container">
-      <table id="Expense-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Income</th>
-            <th>Expenses</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Expense and income data rows will be dynamically inserted here -->
-        </tbody>
-      </table>
-    </div>
-      
+      </div>
      
-    <br> 
-    <h1>Yearly Report</h1>
-    <div class="container">
-      <table id="Expense-table">
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Income</th>
-            <th>Expenses</th>
-            <th>Saving</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Expense and income data rows will be dynamically inserted here -->
-        </tbody>
-      </table>
-    </div>
-    <br><br>
+
+
+  </div>
+    
+<h3 style="text-align: center;">
+   Day To Day Expenses
+</h3>
+
+<br>
+
+<table class="table" id="listOfExpenses" style="border: 2; margin-left:auto;margin-right: auto;text-align: center;">
+    <tr>
+        <td class=".col" " style="font-weight: bold;">Amount</td>
+       
+        <td class=".col" style="font-weight: bold;">Category</td>
+        <td class=" .col" style="font-weight: bold;">Description</td>
+        <td class=".col" style="font-weight: bold;">Action</td>
+    </tr>
+    </table>
+  
+    
     <button onclick="download()" id="downloadexpense">Download File</button>
+   
     <ul id="leaderboard"></ul>
+
+    <div id="pagination" class="pagination">
+        <label for="rows">Rows per page :</label>
+        <select id="rows-per-page"name="rows" onchange="showChangedRows()">
+            <option value="5">5</option>
+            <option value="10" >10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+        </select>
+        <label id="page-details">Showing 1-5 of 11</label>
+        <button id="prev-btn" onclick="showPreviousPage()">prev</button>
+        <button id="next-btn" onclick="showNextPage()">next</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
         integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>

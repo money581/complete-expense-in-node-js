@@ -1,7 +1,7 @@
 const Expense = require('../models/expenses');
 const User = require('../models/users');
 const sequelize = require('../util/database');
-
+const UserServices = require('../services/userservices');
 const addexpense = async (req, res) => {
     try {
       const t = await sequelize.transaction();
@@ -40,13 +40,19 @@ const addexpense = async (req, res) => {
   
   const getexpenses = async (req, res) => {
     try {
-      const expenses = await Expense.findAll({ where: { userId: req.user.id } });
-      return res.status(200).json({ expenses, success: true });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ error: err, success: false });
+        const totalCount=await UserServices.countExpenses(req.user);
+        const { page, rows } = req.query;
+        offset = (page-1)*rows
+        limit = rows * 1;
+        const expense = await req.user.getExpenses(req.user, { offset, limit });
+        res.status(200).json({expense,totalCount});
+       
     }
-  };
+    catch (error) {
+        res.status(504).json({ message: 'Something went wrong!', error: error });
+        console.log(error);
+    }
+}
   
 
 // const deleteexpense = (req, res) => {

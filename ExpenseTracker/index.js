@@ -1,3 +1,5 @@
+let currentPage = 1;
+let rowsPerPage = localStorage.getItem('rowsPerPage')?  localStorage.getItem('rowsPerPage'):5;
 function addNewExpense(e){
     e.preventDefault();
 
@@ -28,39 +30,82 @@ function parseJwt (token) {
   return JSON.parse(jsonPayload);
 } 
 
-window.addEventListener('DOMContentLoaded', async () => {
-    try {
-      const token=localStorage.getItem('token')
-      const decodeToken=parseJwt(token)
-      //console.log(decodeToken);
-      const isadmin = decodeToken.ispremiumuser
+// window.addEventListener('DOMContentLoaded', async () => {
+//     try {
+//       const token=localStorage.getItem('token')
+//       const decodeToken=parseJwt(token)
+//       //console.log(decodeToken);
+//       const isadmin = decodeToken.ispremiumuser
+//       if(isadmin){
+//       showPremiumuserMessage()
+//       showLeaderboard()
+//       }
+//       const response = await axios.get('http://localhost:3000/expense/getexpenses',{headers:{"Authorization":token}});
+//       const expenses = response.data.expenses;
+//       expenses.forEach(expense => {
+//         addNewExpensetoUI(expense);
+//       });
+//     } catch (err) { 
+//       showError(err);
+//     }
+//   });
+  async function getExpenses(){
+    try{
+        const token = localStorage.getItem('token');
+        const decodeToken=parseJwt(token)
+        const isadmin = decodeToken.ispremiumuser
       if(isadmin){
       showPremiumuserMessage()
       showLeaderboard()
       }
-      const response = await axios.get('http://localhost:3000/expense/getexpenses',{headers:{"Authorization":token}});
-      const expenses = response.data.expenses;
-  
-      expenses.forEach(expense => {
-        addNewExpensetoUI(expense);
-      });
-    } catch (err) { 
-      showError(err);
+       const response = await axios.get(`http://localhost:3000/expense/getexpenses?page=${currentPage}&rows=${rowsPerPage}`, { headers: {'Authorization': token}})
+       document.getElementById('listOfExpenses').innerHTML = "";
+       const { expense, totalCount } = response.data;
+       pagination(totalCount);
+       if (expense.length > 0) {
+           for (let i = 0; i < expense.length; i++) {
+            addNewExpensetoUI(expense[i]);
+            console.log("hey");
+           }
+       } else {
+        console.log(error);
+       }
+    } catch (error) {
+       console.log(error);
     }
-  });
+    }
   
 
 function addNewExpensetoUI(expense){
     const parentElement=document.getElementById('listOfExpenses');
     const expenseElemId=`expense-${expense.id}`;
-    parentElement.innerHTML+=`
-    <li id=${expenseElemId}>
-    ${expense.expenseamount} - ${expense.category} - ${expense.description}
-    <button onclick='deleteExpense(event,${expense.id})'>
-    Delete Expense </button>
-    </li>
-    `
+    const tableRow = document.createElement('tr');
+    tableRow.id = expenseElemId;
+
+    const amountCell = document.createElement('td');
+    amountCell.textContent = expense.expenseamount;
+    tableRow.appendChild(amountCell);
+
+    const categoryCell = document.createElement('td');
+    categoryCell.textContent = expense.category;
+    tableRow.appendChild(categoryCell);
+
+    const descriptionCell = document.createElement('td');
+    descriptionCell.textContent = expense.description;
+    tableRow.appendChild(descriptionCell);
+
+    const deleteCell = document.createElement('td');
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete Expense';
+    deleteButton.addEventListener('click', function(event) {
+        deleteExpense(event, expense.id);
+    });
+    deleteCell.appendChild(deleteButton);
+    tableRow.appendChild(deleteCell);
+
+    parentElement.appendChild(tableRow);
 }
+document.addEventListener('DOMContentLoaded', getExpenses);
 
 function deleteExpense(event, expenseId) {
     event.preventDefault();
@@ -81,6 +126,30 @@ function deleteExpense(event, expenseId) {
   function showError(err){
     document.body.innerHTML+=`<div style="color:red;">$(err)</div>`
   }
+
+  function download(){
+    const token = localStorage.getItem('token');
+    
+    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    .then((response) => {
+        if(response.status === 201){
+            //the bcakend is essentially sending a download link
+            //  which if we open in browser, the file would download
+            var a = document.createElement("a");
+            a.href = response.data.fileUrl;
+            a.download = 'myexpense.csv';
+            a.click();
+        } else {
+            throw new Error(response.data.message)
+        }
+
+    })
+    .catch((err) => {
+        showError(err)
+    });
+}
+
+
 function showLeaderboard(){
   const inputElement=document.createElement("input")
   inputElement.type="button"
@@ -127,8 +196,32 @@ document.getElementById('message').appendChild(inputElement)
 }
 
 
+function pagination(totalCount) {
+  maxPages = Math.ceil(totalCount / rowsPerPage);
+  document.getElementById('prev-btn').style.display = currentPage > 1 ? "block" : "none";
+  document.getElementById('next-btn').style.display = maxPages > currentPage ? "block" : "none";
+  document.getElementById('rows-per-page').value=rowsPerPage;
+  const start = (currentPage - 1) * rowsPerPage + 1;
+  const temp=start + Number(rowsPerPage)-1;
+  const end = temp<totalCount? temp:totalCount;
+  document.getElementById('page-details').textContent = `Showing ${start}-${end} of ${totalCount}`;
+}
 
+function showChangedRows() {
+  rowsPerPage = event.target.value;
+  localStorage.setItem('rowsPerPage',rowsPerPage);
+  location.reload();
+}
 
+function showPreviousPage() {
+  currentPage--;
+  getExpenses();
+}
+
+function showNextPage() {
+  currentPage++;
+  getExpenses();
+}
 
 
 
