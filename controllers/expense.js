@@ -44,8 +44,10 @@ const addexpense = async (req, res) => {
         const { page, rows } = req.query;
         offset = (page-1)*rows
         limit = rows * 1;
-        const expense = await req.user.getExpenses(req.user, { offset, limit });
-        res.status(200).json({expense,totalCount});
+        const expenses = await req.user.getExpenses({ offset, limit });
+       
+        res.status(200).json({expenses,totalCount});
+      //  console.log(totalCount);
        
     }
     catch (error) {
