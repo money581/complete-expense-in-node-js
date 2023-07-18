@@ -129,6 +129,7 @@ function deleteExpense(event, expenseId) {
   }
 
   function download(){
+   
     const token = localStorage.getItem('token');
     
     axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
