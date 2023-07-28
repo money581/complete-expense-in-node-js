@@ -30,6 +30,7 @@ app.use('/purchase', purchaseRoutes)
 app.use('/premium', premiumFeatureRoutes)
 app.use('/password', resetPasswordRoutes);
 
+const PORT=process.env.PORT ||3000
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -40,7 +41,8 @@ User.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(User);
 sequelize.sync()
 .then(()=>{
-    app.listen(3000)
+    app.listen(PORT)
+    console.log(PORT);
 }).catch(err=>{
     console.log(err);
 });

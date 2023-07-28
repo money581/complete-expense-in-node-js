@@ -69,7 +69,7 @@ async function getExpenses() {
               addNewExpensetoUI(expenses[i]);
           }
       } else {
-          console.log(error);
+        throw new Error(response.data.message)
       }
   } catch (error) {
       console.log(error);
