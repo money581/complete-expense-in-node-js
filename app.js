@@ -13,6 +13,7 @@ const Order = require('./models/orders');
 
 const app=express();
 const dotenv=require('dotenv');
+dotenv.config();
 const sequelize = require('./util/database');
 const Expense = require('./models/expenses');
 const purchaseRoutes = require('./routes/purchase')
@@ -20,9 +21,9 @@ const premiumFeatureRoutes = require('./routes/premiumFeature')
 const resetPasswordRoutes = require('./routes/resetpassword')
 const Forgotpassword = require('./models/forgotpassword');
 
-dotenv.config();
-app.use(cors());
 
+app.use(cors());
+console.log("db start",process.env.DB_PASSWORD);
 app.use(express.json())
 app.use('/user',userRoutes);
 app.use('/expense', expenseRoutes)
