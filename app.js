@@ -23,7 +23,7 @@ const Forgotpassword = require('./models/forgotpassword');
 
 
 app.use(cors());
-console.log("db start",process.env.DB_PASSWORD);
+
 app.use(express.json())
 app.use('/user',userRoutes);
 app.use('/expense', expenseRoutes)
@@ -31,7 +31,12 @@ app.use('/purchase', purchaseRoutes)
 app.use('/premium', premiumFeatureRoutes)
 app.use('/password', resetPasswordRoutes);
 
+app.use((req,res)=>{
+    res.sendFile(path.join(__dirname,`login/login.html`))
+})
+
 const PORT=process.env.PORT ||3000
+
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -42,8 +47,9 @@ User.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(User);
 sequelize.sync()
 .then(()=>{
+  
     app.listen(PORT)
-    console.log(PORT);
+   
 }).catch(err=>{
     console.log(err);
 });

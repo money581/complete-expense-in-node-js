@@ -11,7 +11,7 @@ const expenseDetails={
 }
 //console.log(expenseDetails)
 const token=localStorage.getItem('token')
-axios.post('http://localhost:3000/expense/addexpense',expenseDetails,{headers:{"Authorization":token}}).then((response) => {
+axios.post('http://16.171.170.233:3000/expense/addexpense',expenseDetails,{headers:{"Authorization":token}}).then((response) => {
    // console.log(response.data.expense);
 addNewExpensetoUI(response.data.expense)
 
@@ -41,7 +41,7 @@ function parseJwt (token) {
 //       showPremiumuserMessage()
 //       showLeaderboard()
 //       }
-//       const response = await axios.get('http://localhost:3000/expense/getexpenses',{headers:{"Authorization":token}});
+//       const response = await axios.get('http://16.171.170.233:3000/expense/getexpenses',{headers:{"Authorization":token}});
 //       const expenses = response.data.expenses;
 //       expenses.forEach(expense => {
 //         addNewExpensetoUI(expense);
@@ -59,7 +59,7 @@ async function getExpenses() {
           showPremiumuserMessage();
           showLeaderboard();
       }
-      const response = await axios.get(`http://localhost:3000/expense/getexpenses?page=${currentPage}&rows=${rowsPerPage}`, { headers: { 'Authorization': token } });
+      const response = await axios.get(`http://16.171.170.233:3000/expense/getexpenses?page=${currentPage}&rows=${rowsPerPage}`, { headers: { 'Authorization': token } });
       document.getElementById('listOfExpenses').innerHTML = "";
       const { expenses, totalCount } = response.data;
       pagination(totalCount);
@@ -112,7 +112,7 @@ function deleteExpense(event, expenseId) {
     event.preventDefault();
     const token=localStorage.getItem('token')
     // Send a DELETE request to the server to delete the expense
-    axios.delete(`http://localhost:3000/expense/deleteexpense/${expenseId}`,{headers:{"Authorization":token}})
+    axios.delete(`http://16.171.170.233:3000/expense/deleteexpense/${expenseId}`,{headers:{"Authorization":token}})
       .then(response => {
         // Remove the expense element from the UI
         const expenseElement = document.getElementById(`expense-${expenseId}`);
@@ -132,7 +132,7 @@ function deleteExpense(event, expenseId) {
    
     const token = localStorage.getItem('token');
     
-    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    axios.get('http://16.171.170.233:3000/user/download', { headers: {"Authorization" : token} })
     .then((response) => {
         if(response.status === 201){
             //the bcakend is essentially sending a download link
@@ -158,7 +158,7 @@ function showLeaderboard(){
   inputElement.value="Show Leaderboard"
 inputElement.onclick=async()=>{
   const token=localStorage.getItem('token')
-const userLeaderBoardArray=await axios.get('http://localhost:3000/premium/showLeaderBoard',{headers:{"Authorization":token}})
+const userLeaderBoardArray=await axios.get('http://16.171.170.233:3000/premium/showLeaderBoard',{headers:{"Authorization":token}})
  var leaderboardElem=document.getElementById('leaderboard')
  leaderboardElem.innerHTML+='<h1> Leader Board </h1>'
  userLeaderBoardArray.data.forEach((userDetails)=>{
@@ -172,13 +172,13 @@ document.getElementById('message').appendChild(inputElement)
 
   document.getElementById('rzp-button1').onclick=async function(e){
     const token=localStorage.getItem('token')
-    const response=await axios.get('http://localhost:3000/purchase/premiummembership',{headers:{"Authorization":token}})
+    const response=await axios.get('http://16.171.170.233:3000/purchase/premiummembership',{headers:{"Authorization":token}})
    // console.log(response);
     var options={
       "key":response.data.key_id,
       "order_id":response.data.order.id,
       "handler":async function(response){
-        await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{order_id:options.order_id, payment_id:response.razorpay_payment_id},{headers:{"Authorization":token}})
+        await axios.post('http://16.171.170.233:3000/purchase/updatetransactionstatus',{order_id:options.order_id, payment_id:response.razorpay_payment_id},{headers:{"Authorization":token}})
         alert('you are a premium user now')
         document.getElementById('rzp-button1').style.visibility="hidden"
         document.getElementById('message').innerHTML="you are prime member now"

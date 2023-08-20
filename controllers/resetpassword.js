@@ -47,7 +47,7 @@ exports.forgotPassword = async (req, res, next) => {
         to: recievers,
         subject: 'forgotpass please reset',
         textContent: `Follow the link and reset password`,
-        htmlContent: `Click on the link below to reset password <br> <a href="http://localhost:3000/password/resetpassword/${id}">Reset password</a>`,
+        htmlContent: `Click on the link below to reset password <br> <a href="http://16.171.170.233:3000/password/resetpassword/${id}">Reset password</a>`,
       }).then((response) => {
         return res.status(202).json({ success: true, message: "password mail sent Successful" });
       }).catch(err => console.log(err));
